@@ -1,0 +1,85 @@
+## Ignore Visual Studio temporary files, build results, and
+## user-specific files. Based on GitHub's official template:
+## https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+
+# Visual Studio working folder
+.vs/
+
+# Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# File-based test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NUnit
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+
+# MSTest
+*.trx
+*.coverage
+*.coveragexml
+
+# Visual Studio Code
+.vscode/
+
+# Tye
+.tye/
+
+# DotCover
+.idea.DotSettings
+
+# Local history
+.localhistory/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Windows image file caches
+ehthumbs.db
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.history/
+
+# Ignore appsettings files
+appsettings.json
+appsettings.*.json
