@@ -1,4 +1,4 @@
-﻿using Mango.Web.Models;
+﻿ using Mango.Web.Models;
 
 namespace Mango.Web.Service.IService
 {
@@ -7,6 +7,9 @@ namespace Mango.Web.Service.IService
         Task<ResponseDto?> CreateOrderAsync(CartDto cartDto);
         Task<ResponseDto?> CreateStripeSession(StripeRequestDto stripeRequestDto);
         Task<ResponseDto?> ValidateStripeSession(int orderHeaderId);
+        Task<ResponseDto?> GetAllOrders(string? userId);
+        Task<ResponseDto?> GetOrder(int orderId);
+        Task<ResponseDto?> UpdateOrderStatus(int orderId, string newStatus);
 
     }
 }
