@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Mango.Web.Utility;
+using System.ComponentModel.DataAnnotations;
 
 namespace Mango.Web.Models
 {
@@ -9,10 +10,15 @@ namespace Mango.Web.Models
         public double Price { get; set; }
         public string Description { get; set; }
         public string CategoryName { get; set; }
-        public string ImageUrl { get; set; }
+
+        public string? ImageUrl { get; set; }
+        public string? ImageLocalPath { get; set; }
 
         //different attribute compare with Product
         [Range(1, 100)]
         public int Count { get; set; } = 1;
-    } 
+        [MaxFileSize(1)]
+        [AllowedExtensions([".jpg", ".png"])]
+        public IFormFile? Image { get; set; }
+    }
 }
