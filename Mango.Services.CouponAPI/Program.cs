@@ -62,7 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 Stripe.StripeConfiguration.ApiKey = builder.Configuration
-    .GetSection("Stripe:SecertKey").Get<string>();
+    .GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -41,6 +41,10 @@
         "Path": "Mango.Services.RewardAPI\\Mango.Services.RewardAPI.csproj",
         "Action": "Start",
         "DebugTarget": "https"
+      },
+      {
+        "Path": "Mango.GatewaySolution\\Mango.GatewaySolution.csproj",
+        "Action": "Start"
       }
     ]
   }
