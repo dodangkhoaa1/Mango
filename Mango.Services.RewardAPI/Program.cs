@@ -15,7 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddSingleton(new RewardService(optionBuilder.Options));
-
+builder.Services.AddHostedService<RabbitMQOrderConsumer>();
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 

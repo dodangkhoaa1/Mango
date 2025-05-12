@@ -3,6 +3,7 @@ using Mango.MessageBus;
 using Mango.Services.ShoppingCartAPI.Data;
 using Mango.Services.ShoppingCartAPI.Models;
 using Mango.Services.ShoppingCartAPI.Models.Dto;
+using Mango.Services.ShoppingCartAPI.RabbitMQSender;
 using Mango.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,14 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private IProductService _productService;
         private ICouponService _couponService;
         private IConfiguration _configuration;
-        private IMessageBus _messageBus;
+        private IRabbitMQCartMessageSender _messageBus;
 
         public CartAPIController(AppDbContext db, 
             IMapper mapper, 
             IProductService productService, 
             ICouponService couponService,
             IConfiguration configuration,
-            IMessageBus messageBus)
+            IRabbitMQCartMessageSender messageBus)
         {
             _db = db;
             _mapper = mapper;
@@ -110,7 +111,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                await _messageBus.PublishMessage(cartDto, 
+                _messageBus.SendMessage(cartDto, 
                     _configuration.GetValue<string>("TopicAndQueueNanmes:EmailShoppingCartQueue"));
 
                 _response.Result = true;

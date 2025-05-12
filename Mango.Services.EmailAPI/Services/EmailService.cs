@@ -43,7 +43,7 @@ namespace Mango.Services.EmailAPI.Services
             await LogAndEmail(message, AMIN_EMAIL);
         }
 
-        public async Task LoadOrderPlaced(RewardsMessage rewardsDto)
+        public async Task LogOrderPlaced(RewardsMessage rewardsDto)
         {
             string message = $"New Order Placed. <br/> Order ID: {rewardsDto.OrderId}";
             await LogAndEmail(message, AMIN_EMAIL);

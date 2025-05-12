@@ -105,7 +105,7 @@ namespace Mango.Services.EmailAPI.Messaging
             try
             {
                 //TODO - try to log email
-                await _emailService.LoadOrderPlaced(objMessage);
+                await _emailService.LogOrderPlaced(objMessage);
                 await args.CompleteMessageAsync(args.Message);
             }
             catch (Exception ex)
