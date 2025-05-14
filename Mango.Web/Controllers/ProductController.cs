@@ -1,6 +1,8 @@
-﻿using Mango.Web.Models;
+﻿using Duende.IdentityModel;
+using Mango.Web.Models;
 using Mango.Web.Service;
 using Mango.Web.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -9,10 +11,12 @@ namespace Mango.Web.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
-
-        public ProductController(IProductService productService)
+        private readonly ICartService _cartService;
+        public ProductController(IProductService productService,
+            ICartService cartService)
         {
             _productService = productService;
+            _cartService = cartService;
         }
         public async Task<IActionResult> ProductIndex()
         {
@@ -130,6 +134,69 @@ namespace Mango.Web.Controllers
             {
                 TempData["error"] = response?.Message;
             }
+            return View(productDto);
+        }
+
+
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int productId)
+        {
+            ProductDto? model = new();
+
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
+
+            if (response != null && response.IsSuccess)
+            {
+                model = JsonConvert
+                    .DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ActionName("ProductDetails")]
+        public async Task<IActionResult> ProductDetails(ProductDto productDto)
+        {
+            CartDto cartDto = new CartDto()
+            {
+                CartHeader = new CartHeaderDto
+                {
+                    UserId = User.Claims
+                    .Where(c => c.Type == JwtClaimTypes.Subject)
+                    ?.FirstOrDefault()?.Value
+                }
+            };
+
+            CartDetailsDto cartDetails = new CartDetailsDto()
+            {
+                Count = productDto.Count,
+                ProductId = productDto.ProductId,
+            };
+
+            List<CartDetailsDto> cartDetailsDtos = new(){
+                cartDetails
+            };
+
+            cartDto.CartDetails = cartDetailsDtos;
+
+            ResponseDto? response = await _cartService.UpsertCartAsync(cartDto);
+
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Item has been added to the Shopping Cart!";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
             return View(productDto);
         }
     }
