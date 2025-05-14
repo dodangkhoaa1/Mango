@@ -76,7 +76,7 @@
                             <h4 class="d-flex justify-content-between align-items-center mb-3">
                                 <span class="text-warning">Order Summary</span>
                             </h4>
-                            <label class="bg-info text-dark text-center form-control my-2">Order Status - @Model.Status</label>
+                            <label class="bg-info text-white text-center form-control my-2">Order Status - @Model.Status</label>
 
                             <ul class="list-group mb-3">
                                 @foreach (var detail in Model.OrderDetails)
@@ -85,7 +85,7 @@
                                         <div class="row container">
                                             <div class="col-8">
 
-                                                <h6 class="my-0 text-white-50">@detail.ProductName</h6>
+                                                <h6 class="my-0 text-dark">@detail.ProductName</h6>
                                                 <small class="text-muted">Price : @detail.Price.ToString("c")</small><br />
                                                 <small class="text-muted">Quantity : @detail.Count</small>
                                             </div>

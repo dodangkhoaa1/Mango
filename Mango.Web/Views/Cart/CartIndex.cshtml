@@ -7,7 +7,7 @@
         <input asp-for="CartHeader.CartHeaderId" hidden />
         <div class="">
             <div class="card border mt-4 container">
-                <div class="card-header bg-dark text-light ml-0 row ">
+                <div class="card-header bg-white-50 text-light ml-0 row ">
                     <div class="col-6">
                         <h3 class="text-success"><i class="bi bi-cart"></i> &nbsp; Shopping Cart</h3>
                     </div>
@@ -65,12 +65,12 @@
                             <span>Coupon:</span>
                             @if (string.IsNullOrEmpty(Model.CartHeader.CouponCode))
                             {
-                                <input class="bg-dark text-white" asp-for="@Model.CartHeader.CouponCode" />
+                                <input class="bg-white text-dark" asp-for="@Model.CartHeader.CouponCode" />
                                 <button asp-action="ApplyCoupon" type="submit" class="btn btn-sm btn-success"> Apply </button>
                             }
                             else
                             {
-                                <input class="bg-dark text-white" asp-for="@Model.CartHeader.CouponCode" disabled />
+                                <input class="bg-white-50 text-dark" asp-for="@Model.CartHeader.CouponCode" disabled />
                                 <button asp-action="RemoveCoupon" type="submit" class="btn btn-sm btn-success"> Remove </button>
                             }
                         </div>
