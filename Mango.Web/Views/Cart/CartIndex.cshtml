@@ -5,7 +5,7 @@
         <br />
         <input asp-for="CartHeader.UserId" hidden />
         <input asp-for="CartHeader.CartHeaderId" hidden />
-        <div class="">
+        <div >
             <div class="card border mt-4 container">
                 <div class="card-header bg-white-50 text-light ml-0 row ">
                     <div class="col-6">
@@ -26,7 +26,7 @@
                             <div class="col-lg-2">
                                 Price
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-2 text-center">
                                 Count
                             </div>
                             <div class="col-lg-1">
@@ -46,13 +46,24 @@
                                 <div style="font-size:11px;">@cartDetail.Product.Description</div>
                             </div>
                             <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@string.Format("{0:c}", cartDetail.Product.Price)</span>
+                                <span style="font-size:17px;" class="cartItemPrice">@string.Format("{0:c}", cartDetail.Product.Price)</span>
                             </div>
-                            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                                <span style="font-size:17px;">@cartDetail.Count</span>
+
+                            <div class="cartDetails col-3 col-md-2 p-md-0 d-flex" style="font-size:11px;" data-cart-details-id="@cartDetail.CartDetailsId">
+                                <button class="decreaseQuantity btn btn-link px-2">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+
+                                <input min="0" max="100" value="@cartDetail.Count" type="number"
+                                       class="cartDetailsCount form-control form-control-sm text-center" />
+
+                                <button class="increaseQuantity btn btn-link px-2">
+                                    <i class="bi bi-plus"></i>
+                                </button>
                             </div>
+
                             <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
-                                <a asp-action="Remove" asp-route-cartDetailsId="@cartDetail.CartDetailsId" class="btn btn-sm btn-danger">
+                                <a data-cart-details-id="@cartDetail.CartDetailsId" asp-action="Remove" asp-route-cartDetailsId="@cartDetail.CartDetailsId" class="deleteCartItem btn btn-sm btn-danger">
                                     <i class="bi bi-trash-fill"></i>
                                 </a>
                             </div>
@@ -75,7 +86,8 @@
                             }
                         </div>
                         <div class="col-6 text-end">
-                            <span class="text-danger" style="font-size:21px;">  Order Total : @string.Format("{0:c}", Model.CartHeader.CartTotal) <br /></span>
+                            <span style="font-size:21px;" class="text-danger">Order Total : </span>
+                            <span class="orderTotal text-danger" style="font-size:21px;">@string.Format("{0:c}", Model.CartHeader.CartTotal)<br /></span>
                             @if (Model.CartHeader.Discount > 0)
                             {
                                 <span class="text-success"> Order Discount :  @string.Format("{0:c}", Model.CartHeader.Discount)</span>
@@ -103,4 +115,8 @@ else
 
     </div>
 
+}
+
+@section Scripts {
+    <script defer src="~/js/cart.js"></script>
 }

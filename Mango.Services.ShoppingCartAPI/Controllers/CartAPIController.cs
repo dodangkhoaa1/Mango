@@ -24,9 +24,9 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private IConfiguration _configuration;
         private IRabbitMQCartMessageSender _messageBus;
 
-        public CartAPIController(AppDbContext db, 
-            IMapper mapper, 
-            IProductService productService, 
+        public CartAPIController(AppDbContext db,
+            IMapper mapper,
+            IProductService productService,
             ICouponService couponService,
             IConfiguration configuration,
             IRabbitMQCartMessageSender messageBus)
@@ -111,7 +111,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                _messageBus.SendMessage(cartDto, 
+                _messageBus.SendMessage(cartDto,
                     _configuration.GetValue<string>("TopicAndQueueNanmes:EmailShoppingCartQueue"));
 
                 _response.Result = true;
@@ -231,6 +231,28 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             }
 
             return _response;
+        }
+
+        [HttpPatch("UpdateQuantityCart/{cartDetailsId}/{quantity}")]
+        public async Task<ResponseDto> UpdateQuantityCart(int cartDetailsId, int quantity)
+        {
+            try
+            {
+                CartDetails cartDetails = _db.CartDetails
+                    .First(cd => cd.CartDetailsId == cartDetailsId);
+
+                cartDetails.Count = quantity;
+                _db.CartDetails.Update(cartDetails);
+                await _db.SaveChangesAsync();
+
+                _response.Result = _mapper.Map<CartDetailsDto>(cartDetails);
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message.ToString();
+                _response.IsSuccess = false;
+            }
+            return _response;   
         }
     }
 }
