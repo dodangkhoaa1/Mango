@@ -1,4 +1,6 @@
 ﻿@model CartDto
+<div id="cartIndex">
+
 @if (Model.CartHeader != null && Model.CartDetails?.Count() > 0)
 {
     <form method="post" asp-action="EmailCart">
@@ -116,6 +118,7 @@ else
     </div>
 
 }
+</div>
 
 @section Scripts {
     <script defer src="~/js/cart.js"></script>

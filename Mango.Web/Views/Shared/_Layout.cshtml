@@ -55,11 +55,11 @@
 
                     <ul class="navbar-nav align-items-lg-center">
                         <li class="nav-item me-md-4 mt-3">
-                            <a class="nav-link d-inline position-relative" asp-area="" asp-controller="Cart" asp-action="CartIndex">
+                            <a id="cart" class="nav-link d-inline position-relative" asp-area="" asp-controller="Cart" asp-action="CartIndex">
                                 &nbsp; <i class="bi bi-cart"></i>&nbsp;
-                                <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger">
-                                    1
-                                </span>
+                                @* <span id="cartItemNumber" class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"> *@
+                                    
+                                @* </span> *@
                             </a>
                         </li>
                         @if (!User.Identity.IsAuthenticated)

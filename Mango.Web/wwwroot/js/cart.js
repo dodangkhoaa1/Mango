@@ -1,4 +1,5 @@
 ﻿$(document).ready(function () {
+    getUserId();
     $(".decreaseQuantity").on("click", function (e) {
         e.preventDefault();
         var parent = $(this).closest(".cartDetails");
@@ -72,7 +73,7 @@ function updateQuantity(countElement, cartDetailsId, quantity) {
     });
 }
 
-function removeItem(rowElement, cartDetailsId) {
+ function removeItem(rowElement, cartDetailsId) {
     var isContinue = confirm('The item will be delete. Are you sure to remove it?');
     if (!isContinue) {
         return;
@@ -85,9 +86,23 @@ function removeItem(rowElement, cartDetailsId) {
         },
         data: JSON.stringify(cartDetailsId),
         contentType: "application/json",
-        success: function (result) {
-            rowElement.remove();
-            calculateCartTotal();
+        success: async function (response) {
+            //check the number item of cart
+            //if there are items reamain
+            var cartDto = await getCart();
+            if (cartDto) {
+                rowElement.remove();
+                calculateCartTotal();
+                updateCartItemNumber();
+            } else {
+                //else if there is no item remain -> display 
+                var noShow = `<div class="text-center">
+                <p>Please add items to cart.</p>
+                <a href="/" class="btn btn-outline-warning mt-2 btn-sm">Continue Shopping</a>
+                 </div>`;
+                $('#cartIndex').html(noShow);
+            }
+
         },
         error: function (error) {
             console.log("Error: " + error);
@@ -103,7 +118,7 @@ function getCouponByCode(code) {
                 "Authorization": "Bearer " + getToken()
             },
             success: function (response) {
-                resolve(response.result); // hoặc response tùy cấu trúc
+                resolve(response.result);
             },
             error: function (error) {
                 reject(error);
@@ -112,23 +127,7 @@ function getCouponByCode(code) {
     });
 }
 
-function getToken() {
-    const name = "JWTToken"
-    const cookieArr = document.cookie.split(";");
 
-    for (let i = 0; i < cookieArr.length; i++) {
-        const cookie = cookieArr[i].trim();
-
-        // Tách tên và giá trị cookie
-        if (cookie.startsWith(name + "=")) {
-            console.log(cookie);
-            return cookie.substring(name.length + 1);
-        }
-    }
-    return null;
-
-
-}
 async function calculateCartTotal() {
     var priceEls = $(".cartItemPrice");
     var countEls = $(".cartDetailsCount");
@@ -162,3 +161,4 @@ async function calculateCartTotal() {
     orderTotal.text(`$${total.toFixed(2)}`);
     orderTotal.append('<br>');
 }
+
