@@ -81,16 +81,16 @@
                             }
                             else
                             {
-                                <input class="bg-white-50 text-dark" asp-for="@Model.CartHeader.CouponCode" disabled />
+                                <input class="coupon-code bg-white-50 text-dark" asp-for="@Model.CartHeader.CouponCode" disabled />
                                 <button asp-action="RemoveCoupon" type="submit" class="btn btn-sm btn-success"> Remove </button>
                             }
                         </div>
-                        <div class="col-6 text-end">
+                        <div id="cartSummary" class=" col-6 text-end">
                             <span style="font-size:21px;" class="text-danger">Order Total : </span>
-                            <span class="orderTotal text-danger" style="font-size:21px;">@string.Format("{0:c}", Model.CartHeader.CartTotal)<br /></span>
+                            <span class="cartTotal text-danger" style="font-size:21px;">@string.Format("{0:c}", Model.CartHeader.CartTotal)<br /></span>
                             @if (Model.CartHeader.Discount > 0)
                             {
-                                <span class="text-success"> Order Discount :  @string.Format("{0:c}", Model.CartHeader.Discount)</span>
+                                <span class="cartDiscount text-success"> Order Discount :  @string.Format("{0:c}", Model.CartHeader.Discount)</span>
                             }
                         </div>
                     </div>

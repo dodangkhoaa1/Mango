@@ -4,6 +4,16 @@ using Ocelot.Middleware;
 using Ocelot.Values;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 builder.AddAppAuthentication();
 if (builder.Environment.EnvironmentName.ToString().ToLower().Equals("production"))
 {
@@ -19,7 +29,7 @@ builder.Services.AddOcelot(builder.Configuration);
 
 
 var app = builder.Build();
-
+app.UseCors("AllowFrontend");
 app.MapGet("/", () => "Hello World!");
 app.UseOcelot().GetAwaiter().GetResult();
 app.Run();

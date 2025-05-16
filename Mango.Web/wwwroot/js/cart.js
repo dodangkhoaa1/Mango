@@ -5,7 +5,7 @@
         var cartDetailsId = parent.data("cart-details-id");
         var countElement = $(this).siblings(".cartDetailsCount");
 
-        var newQuantity = parseInt(countElement.val())-1;
+        var newQuantity = parseInt(countElement.val()) - 1;
         if (newQuantity <= 0) {
             removeItem(countElement.closest(".row"), cartDetailsId)
         } else {
@@ -18,7 +18,7 @@
         var parent = $(this).closest(".cartDetails");
         var cartDetailsId = parent.data("cart-details-id");
         var countElement = $(this).siblings(".cartDetailsCount");
-        var newQuantity = parseInt(countElement.val()) +1;
+        var newQuantity = parseInt(countElement.val()) + 1;
         if (newQuantity <= 100) {
             updateQuantity(countElement, cartDetailsId, newQuantity);
         } else {
@@ -57,8 +57,11 @@
 
 function updateQuantity(countElement, cartDetailsId, quantity) {
     $.ajax({
-        url: `https://localhost:7003/api/cart/UpdateQuantityCart/${cartDetailsId}/${quantity}`,
+        url: `https://localhost:7777/api/cart/UpdateQuantityCart/${cartDetailsId}/${quantity}`,
         type: "PATCH",
+        headers: {
+            "Authorization": "Bearer " + getToken()
+        },
         success: function (result) {
             countElement.val(result.result.count);
             calculateCartTotal();
@@ -68,10 +71,18 @@ function updateQuantity(countElement, cartDetailsId, quantity) {
         }
     });
 }
+
 function removeItem(rowElement, cartDetailsId) {
+    var isContinue = confirm('The item will be delete. Are you sure to remove it?');
+    if (!isContinue) {
+        return;
+    }
     $.ajax({
-        url: `https://localhost:7003/api/cart/RemoveCart`,
+        url: `https://localhost:7777/api/cart/RemoveCart`,
         type: "POST",
+        headers: {
+            "Authorization": "Bearer " + getToken()
+        },
         data: JSON.stringify(cartDetailsId),
         contentType: "application/json",
         success: function (result) {
@@ -83,20 +94,71 @@ function removeItem(rowElement, cartDetailsId) {
         }
     });
 }
+function getCouponByCode(code) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `https://localhost:7777/api/coupon/GetByCode/${code}`,
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + getToken()
+            },
+            success: function (response) {
+                resolve(response.result); // hoặc response tùy cấu trúc
+            },
+            error: function (error) {
+                reject(error);
+            }
+        });
+    });
+}
 
-function calculateCartTotal() {
+function getToken() {
+    const name = "JWTToken"
+    const cookieArr = document.cookie.split(";");
+
+    for (let i = 0; i < cookieArr.length; i++) {
+        const cookie = cookieArr[i].trim();
+
+        // Tách tên và giá trị cookie
+        if (cookie.startsWith(name + "=")) {
+            console.log(cookie);
+            return cookie.substring(name.length + 1);
+        }
+    }
+    return null;
+
+
+}
+async function calculateCartTotal() {
     var priceEls = $(".cartItemPrice");
     var countEls = $(".cartDetailsCount");
 
     var total = 0;
     for (var i = 0; i < countEls.length; i++) {
-        console.log($(priceEls[i]).text().substring(1))
         var price = parseFloat($(priceEls[i]).text().substring(1));
         var count = parseInt($(countEls[i]).val());
 
+        var couponCode = $(".coupon-code").val();
+
         total += price * count;
-        
     }
-    var orderTotal = $(".orderTotal");
-    orderTotal.text("$ " + total.toFixed(2));
+
+    if (couponCode != null && couponCode.trim() != "") {
+        var couponDto = await getCouponByCode(couponCode);
+
+        discountAmount = parseInt(couponDto.discountAmount);
+        if (discountAmount != 0 && total >= couponDto.minAmount) {
+            total -= discountAmount;
+            if ($('.cartDiscount').length > 0) {
+                $('.cartDiscount').text(`Order Discount : ${discountAmount.toFixed(2)}`);
+            } else {
+                $('#cartSummary').append(`<span class="cartDiscount text-success">Order Discount : ${discountAmount.toFixed(2)}</span>`);
+            }
+        } else if (total < couponDto.minAmount) {
+            $('.cartDiscount').remove();
+        }
+    }
+    var orderTotal = $(".cartTotal");
+    orderTotal.text(`$${total.toFixed(2)}`);
+    orderTotal.append('<br>');
 }

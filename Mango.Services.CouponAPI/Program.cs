@@ -9,7 +9,16 @@ using Microsoft.OpenApi.Models;
 using Mango.Services.CouponAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
@@ -53,7 +62,7 @@ builder.AddAppAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
+app.UseCors("AllowFrontend");
 // Configure the HTTP request pipeline.
 app.UseSwagger();
 if (app.Environment.IsDevelopment())

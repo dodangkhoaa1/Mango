@@ -190,7 +190,7 @@ namespace Mango.Web.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to the Shopping Cart!";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ProductDetails", "Product", new { productId = productDto.ProductId});
             }
             else
             {
